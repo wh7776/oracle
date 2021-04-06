@@ -293,7 +293,7 @@ a.order_date between to_date('2017-1-1','yyyy-mm-dd') and to_date('2018-6-1','yy
 
 <img src="执行计划11.PNG" alt="1" style="zoom:150%;" />
 
-说明：此查询语句查询从2017年1月到2018年6月的所有订单记录，其中Rows=1，consistent gets=177，cost成本=547，一次全表搜索filter。在对于此实验中的大量数据执行查询操作时，由于我们按订单时间建立了范围分区，所以查询只需要在对应的表空间中进行查询，避免了对全部数据的搜索，极大提升了查询效率。
+说明：此查询语句查询从2017年1月到2018年6月的所有订单记录，其中Rows=1，consistent gets=177，cost成本=547，一次全表搜索filter。在对于此实验中的大量数据执行查询操作时，由于我们按订单时间建立了范围分区，所以查询只需要在对应的Pstart=3和Pstop=4两个分区中进行查询，避免了对全部数据的搜索，极大提升了查询效率。
 
 第二条语句运行结果：
 
@@ -305,28 +305,4 @@ a.order_date between to_date('2017-1-1','yyyy-mm-dd') and to_date('2018-6-1','yy
 
 <img src="执行计划22.PNG" alt="1" style="zoom:150%;" />
 
-说明：此查询语句联合查询订单表和订单详表中的2017年1月到2018年6月的订单详情，其中Rows=1，consistent gets=290，cost成本=781，两次全表搜索filter。对于订单表和订单详表两个表的联合查询，由于订单详表使用引用分区使其数据也按主表订单表的日期范围进行分区存储且利用外键关联到主表，这使从表按主表的分区方案与主表存储在同一分区中，极大提高了查询的效率。
-
-## 查看数据库的使用情况
-
-以下样例查看表空间的数据库文件，以及每个文件的磁盘占用情况。
-
-```
-SQL>SELECT tablespace_name,FILE_NAME,BYTES/1024/1024 MB,MAXBYTES/1024/1024 MAX_MB,autoextensible FROM dba_data_files  WHERE  tablespace_name='USERS';
-
-SQL>SELECT a.tablespace_name "表空间名",Total/1024/1024 "大小MB",
- free/1024/1024 "剩余MB",( total - free )/1024/1024 "使用MB",
- Round(( total - free )/ total,4)* 100 "使用率%"
- from (SELECT tablespace_name,Sum(bytes)free
-        FROM   dba_free_space group  BY tablespace_name)a,
-       (SELECT tablespace_name,Sum(bytes)total FROM dba_data_files
-        group  BY tablespace_name)b
- where  a.tablespace_name = b.tablespace_name;
-```
-
-- autoextensible是显示表空间中的数据文件是否自动增加。
-- MAX_MB是指数据文件的最大容量。
-
-![1](数据库使用1.PNG)
-
-![1](数据库使用2.PNG)
+说明：此查询语句联合查询订单表和订单详表中的2017年1月到2018年6月的订单详情，其中Rows=1，consistent gets=290，cost成本=781，两次全表搜索filter。对于订单表和订单详表两个表的联合查询，由于订单详表使用引用分区使其数据也按主表订单表的日期范围进行分区存储且利用外键关联到主表，这使从表按主表的分区方案与主表存储在同一分区中，此查询只需要在Pstart=3和Pstop=4两个分区之间进行搜索，极大提高了查询的效率。
