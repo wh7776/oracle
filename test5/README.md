@@ -122,10 +122,12 @@
    select MyPack.Get_SaleAmount(11) AS 部门11应收金额,MyPack.Get_SaleAmount(12) AS 部门12应收金额 from dual;
    ```
 
+   
+
    ![函数测试](函数测试.PNG)
 
    6.过程Get_Employees()测试代码：
-
+   
    ```
    set serveroutput on
    DECLARE
@@ -135,7 +137,11 @@
      MYPACK.Get_Employees (  V_EMPLOYEE_ID => V_EMPLOYEE_ID) ;  
      V_EMPLOYEE_ID := 11;
      MYPACK.Get_Employees (  V_EMPLOYEE_ID => V_EMPLOYEE_ID) ;    
-   END;
+END;
    ```
-
+   
+   
+   
    ![过程测试](过程测试.PNG)
+   
+   
