@@ -33,13 +33,13 @@
 
 1、外卖用户（WM_USER）：用户包括用户ID（ID）,用户名（USER_NAME）,用户密码（USER_PWD）,用户地址（USER_ADDRESS）,用户电话（USER_PHONE）,余额（BALANCE）,注册时间（CREATE_DATE）。用户实体如下图1.1.1。
 
-![img](./用户实体.png) 
+![1](./用户实体.png) 
 
 ​															图 1.1.1 WM_USER实体
 
 2、外卖店（SHOP）：外卖店包括外卖店ID（ID）,外卖店名（USER_NAME）,外卖店电话（SHOP_PHONE）,销售量（SELL_NUM）,评分（SCORE）。外卖店实体如下图1.1.2。
 
-![img](./外卖店实体.png) 
+![2](./外卖店实体.png) 
 
 ​																图 1.1.2 SHOP实体
 
